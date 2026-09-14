@@ -34,12 +34,11 @@ export async function createTodo(req, res) {
 export async function updateTodo(req, res) {
   try {
     const { id } = req.params;
-    const todo = await Todo.findByIdAndUpdate(
-      id,
+    const todo = await Todo.findOneAndUpdate(
+      { _id: id, user: req.user._id },
       {
         title: req.body.title,
         completed: req.body.completed,
-        user: req.user._id,
       },
       {
         returnDocument: "after",
@@ -62,12 +61,10 @@ export async function updateTodo(req, res) {
 export async function deleteTodo(req, res) {
   try {
     const { id } = req.params;
-    const todo = await Todo.findByIdAndDelete(id, {
-      user: req.user._id,
-    });
+    const todo = await Todo.findOneAndDelete({ _id: id, user: req.user._id });
 
     if (!todo) {
-      res.status(404).json({ message: "Todo nicht gefunden" });
+      return res.status(404).json({ message: "Todo nicht gefunden" });
     }
     res.json({ message: "Todo erfolgreiche gelöscht" });
   } catch (error) {

@@ -5,7 +5,7 @@ const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("bearer")) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         message: "Nicht autorisiert",
       });
@@ -28,7 +28,7 @@ const authMiddleware = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    res.status(401).json({
       message: "Ungültiger oder abgelaufener Token",
     });
   }
